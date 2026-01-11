@@ -1,5 +1,6 @@
 package med.voll.api;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +8,20 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApiApplication.class, args);
+        Dotenv dotenv = Dotenv.configure()
+                .directory("./")  // Busca en la raíz del proyecto
+                .ignoreIfMissing()
+                .load();
+
+        // Imprime para verificar que se cargó (quita después)
+        System.out.println("DB_HOST cargado: " + dotenv.get("DB_HOST"));
+
+        // Cargar como propiedades del sistema
+        dotenv.entries().forEach(entry ->
+                System.setProperty(entry.getKey(), entry.getValue())
+        );
+
+        SpringApplication.run(ApiApplication.class, args);
 	}
 
 }
